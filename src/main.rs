@@ -2,6 +2,7 @@ use std::io::prelude::*;
 use std::io;
 use std::env;
 use std::fs;
+use std::time::{ Instant };
 
 type Memtype = u8;
 const MEMSIZE: usize = 30_000;
@@ -141,6 +142,8 @@ fn main() {
                                 .filter(|&(index, _)| index != 0)
                                 .map(|(_, elem)| elem)
                                 .collect();
+
+    let start = Instant::now();
     if args.len() != 0 {
         for file in args{
                 // read file
@@ -190,7 +193,8 @@ fn main() {
             }
         }
     }
-
+    let duration = start.elapsed().as_micros();
+    println!("\nI burnt this code in {} microseconds :)", duration);
 }
 
 #[test]
