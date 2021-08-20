@@ -70,7 +70,7 @@ fn main() {
         }
     }
     let duration = start.elapsed().as_micros();
-    println!("\nI burnt this code in {} microseconds :)", duration);
+    println!("\n\nI burnt this code in {} microseconds :)", duration);
 }
 
 #[test]
