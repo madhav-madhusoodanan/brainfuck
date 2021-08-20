@@ -3,12 +3,19 @@ use std::io;
 use std::env;
 use std::fs;
 
+type Memtype = u8;
+const MEMSIZE: usize = 30_000;
+const ULIMIT:Memtype = 255;
+const LLIMIT:Memtype = 0;
+
 enum CompileError {
-    ParseError
+    ReadError,
+    ItsTooBig,
+    ItsTooSmall
 }
 
 struct Evaluator {
-    memory: [u8; 30_000],
+    memory: [Memtype; MEMSIZE],
     index: usize,
     loopvar: usize
 }
@@ -17,23 +24,22 @@ struct Evaluator {
 impl Evaluator {
     fn new() -> Evaluator {
         Evaluator {
-            memory: [0u8; 30_000],
+            memory: [0; MEMSIZE],
             index: 0usize,
             loopvar: 0usize,
         }
     }
-    fn evaluate(&mut self, code: &String) -> Result<Vec<u8>, CompileError> {
-        let mut output: Vec<u8> = Vec::new();
+    fn evaluate(&mut self, code: &String) -> Result<Vec<Memtype>, CompileError> {
+        let mut output: Vec<Memtype> = Vec::new();
         let loop_points = code
                             .bytes()
                             .enumerate()
                             .filter(|&(_, x)| x == b'[')
                             .map(|(i,_)|i)
                             .collect::<Vec<usize>>();
-        let byte: Vec<u8> = code.bytes().collect();
+        let byte: Vec<Memtype> = code.bytes().collect();
         let mut index = 0usize;
         loop {
-            self.index = self.index % 30_000;
             if (index) >= byte.len() {
                 break;
             }
@@ -42,22 +48,33 @@ impl Evaluator {
                     match char {
                         b'+' => { 
                             // increment value at a memory location 
-                            self.memory[self.index] += 1;
-                            index+= 1;
+                            if self.memory[self.index] == ULIMIT {
+                                return Err(CompileError::ItsTooBig)
+                            } else {
+                                self.memory[self.index] += 1;
+                                index+= 1;
+                            }
                         }
                         b'-' => { 
                             // decrement value at the memory location
-                            self.memory[self.index] -= 1;
-                            index+= 1;
-
+                            if self.memory[self.index] == LLIMIT {
+                                return Err(CompileError::ItsTooSmall)
+                            } else {
+                                self.memory[self.index] -= 1;
+                                index+= 1;
+                            }
                         }
                         b'>' => { 
                             // move right
                             self.index += 1;
+                            self.index = self.index % MEMSIZE;
                             index+= 1;
                         }
-                        b'<' => { 
+                        b'<' => {
                             // move left
+                            if self.index == 0 {
+                                self.index += MEMSIZE;
+                            } 
                             self.index -= 1;
                             index+= 1;
                         }
@@ -69,7 +86,7 @@ impl Evaluator {
                         b']' => {
                             // end of loop, go to its corresponding opening bracket
                             self.loopvar -= 1;
-                            if self.memory[self.index] == 0 {
+                            if self.memory[self.index] == LLIMIT {
                                 index += 1;
                             } else {
                                 index = match loop_points.get(self.loopvar) {
@@ -81,7 +98,10 @@ impl Evaluator {
                         b',' => {
                             // getchar
                             let mut buffer = [0u8];
-                            io::stdin().read(&mut buffer);
+                            match io::stdin().read(&mut buffer) {
+                                Ok(_) => (),
+                                Err(_) => return Err(CompileError::ReadError)
+                            };
                             self.memory[self.index] = buffer[0];
                             index+= 1;
                         }
@@ -122,23 +142,51 @@ fn main() {
                                 .collect();
     if args.len() != 0 {
         for file in args{
-                let input = fs::read_to_string(&file).expect("ouch!");
+                // read file
+                let input = match fs::read_to_string(&file) {
+                    Ok(input) => input,
+                    Err(_) => {
+                        println!("Dude i cant read {} file idk why :(", file);
+                        continue;
+                    }
+                };
+
+                // process
                 match process(&input) {
                     Ok(_) => (), 
-                    Err(_) => panic!("Error")
+                    Err(e) => {
+                        match e {
+                            CompileError::ItsTooSmall => println!("Dude in {}, one memory cell just became negative", file),
+                            CompileError::ItsTooBig => println!("Dude in {}, one memory cell just became soo big", file),
+                            _ => println!("Dude i cant process {} file idk why :(", file)
+                        }
+                        continue;
+                    }
                 }
 
                 
         }
     } else if args.len() == 0 {
         let mut input = String::new();
+
+        // read line from stdin
         match io::stdin().read_line(&mut input) {
             Ok(_) => (),
-            Err(_) => panic!("Error")
+            Err(_) => {
+                println!("Dude i cant understand you :(");
+            }
         };
+
+        // process
         match process(&input) {
             Ok(_) => (), 
-            Err(_) => panic!("Error")
+            Err(e) => {
+                match e {
+                    CompileError::ItsTooSmall => println!("Dude one memory cell just became negative"),
+                    CompileError::ItsTooBig => println!("Dude one memory cell just became soo big"),
+                    _ => println!("Dude i cant process this idk why :(")
+                }
+            }
         }
     }
 
