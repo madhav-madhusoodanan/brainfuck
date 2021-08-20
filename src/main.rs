@@ -111,7 +111,7 @@ impl Evaluator {
                             index+= 1;
                         }
 
-                        _ => ()
+                        _ => index += 1
                     }
                 }
                 None => {break;}
@@ -128,6 +128,7 @@ fn process(code: &String) -> Result<(), CompileError> {
             for ascii in value {
                 print!("{}", ascii as char);
             };
+            println!("");
             Ok(())
         },
         Err(e) => Err(e)
