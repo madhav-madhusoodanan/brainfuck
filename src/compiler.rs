@@ -12,6 +12,13 @@ pub enum CompileError {
     ItsTooSmall
 }
 
+fn rickRollCheck(code: &String) {
+    if code.contains("rick") {
+        // print "Never gonna give you up, never gonna let you down <3"
+        print!("Never gonna give you up, never gonna let you down <3")
+    }
+}
+
 pub fn evaluate(code: &String) -> Result<Vec<Memtype>, CompileError> {
     let mut memory: [Memtype; MEMSIZE] = [0; MEMSIZE];
     let mut address:usize = 0;
@@ -26,6 +33,9 @@ pub fn evaluate(code: &String) -> Result<Vec<Memtype>, CompileError> {
                         .collect::<Vec<usize>>();
     let byte: Vec<Memtype> = code.bytes().collect();
     let mut code_index = 0usize;
+
+    rickRollCheck(code);
+
     loop {
         if (code_index) >= byte.len() {
             break;
