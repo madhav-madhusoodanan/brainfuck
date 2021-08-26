@@ -32,8 +32,8 @@ fn main() {
                     }, 
                     Err(e) => {
                         match e {
-                            compiler::CompileError::ItsTooSmall => println!("Dude in {}, one memory cell just became negative", file),
-                            compiler::CompileError::ItsTooBig => println!("Dude in {}, one memory cell just became soo big", file),
+                            compiler::CompileError::ItsTooSmall(_) => println!("Dude in {}, one memory cell just became negative", file),
+                            compiler::CompileError::ItsTooBig(_) => println!("Dude in {}, one memory cell just became soo big", file),
                             _ => println!("Dude i cant process {} file idk why :(", file)
                         }
                         continue;
@@ -62,8 +62,8 @@ fn main() {
             }, 
             Err(e) => {
                 match e {
-                    compiler::CompileError::ItsTooSmall => println!("Dude one memory cell just became negative"),
-                    compiler::CompileError::ItsTooBig => println!("Dude one memory cell just became soo big"),
+                    compiler::CompileError::ItsTooSmall(_) => println!("Dude one memory cell just became negative"),
+                    compiler::CompileError::ItsTooBig(_) => println!("Dude one memory cell just became soo big"),
                     _ => println!("Dude i cant process this idk why :(")
                 }
             }
