@@ -22,7 +22,7 @@ fn rick_roll_check(code: &String) {
 
 pub fn evaluate(code: &String) -> Result<Vec<Memtype>, CompileError> {
     let bytes: Vec<Memtype> = code.bytes().collect();
-    let mut memory: [Memtype; MEMSIZE] = [0; MEMSIZE];
+    let mut memory = [LLIMIT; MEMSIZE];
     let mut address:usize = 0;
     let mut code_index = 0usize;
     let mut output: Vec<Memtype> = Vec::new();
@@ -31,16 +31,13 @@ pub fn evaluate(code: &String) -> Result<Vec<Memtype>, CompileError> {
         let mut loc:Vec<usize> = Vec::new();
         for (code_index, code) in bytes.iter().enumerate() {
             match code {
-                b'[' => {
-                        loc.push(code_index);
-                    } 
+                b'[' => loc.push(code_index),
                     
                 b']' => {
-                        let loc_start = match loc.pop() {
-                            Some(loc_end) => loc_end,
+                        match loc.pop() {
+                            Some(loc_start) => loop_points.push((loc_start, code_index)),
                             None => return Err(CompileError::OppositesNotAttracted(code_index))
                         };
-                        loop_points.push((loc_start, code_index));
                     }
                 _ => continue
             }
@@ -56,9 +53,9 @@ pub fn evaluate(code: &String) -> Result<Vec<Memtype>, CompileError> {
                     b'+' => { 
                         // increment value at a memory location 
                         if memory[address] == ULIMIT {
-                            memory[address] = LLIMIT;
-                            code_index += 1;
-                            // return Err(CompileError::ItsTooBig(code_index))
+                            // memory[address] = LLIMIT;
+                            // code_index += 1;
+                            return Err(CompileError::ItsTooBig(code_index))
                         } else {
                             memory[address] += 1;
                             code_index += 1;
@@ -67,9 +64,9 @@ pub fn evaluate(code: &String) -> Result<Vec<Memtype>, CompileError> {
                     b'-' => { 
                         // decrement value at the memory location
                         if memory[address] == LLIMIT {
-                            memory[address] = ULIMIT;
-                            code_index += 1;
-                            // return Err(CompileError::ItsTooSmall(address))
+                            // memory[address] = ULIMIT;
+                            // code_index += 1;
+                            return Err(CompileError::ItsTooSmall(address))
                         } else {
                             memory[address] -= 1;
                             code_index += 1;
@@ -99,7 +96,7 @@ pub fn evaluate(code: &String) -> Result<Vec<Memtype>, CompileError> {
                             code_index += 1;
                         } else {
                             code_index = match loop_points.iter().find(|&&(start, _)| start == code_index){
-                                Some(&i) => i.0 + 1,
+                                Some(&(_, end)) => end,
                                 None => panic!("")
                             };
                         }
@@ -110,7 +107,7 @@ pub fn evaluate(code: &String) -> Result<Vec<Memtype>, CompileError> {
                             code_index += 1;
                         } else {
                             code_index = match loop_points.iter().find(|&&(_, end)| end == code_index){
-                                Some(&i) => i.0,
+                                Some(&(start, _)) => start,
                                 None => panic!("")
                             };
                         }
