@@ -1,6 +1,6 @@
 # brainfuck (complete)
 
-A compiler written in rust, for code written in brainfuck
+A compiler written in rust, for code written in brainfuck<br />
 Please use the latest binary(built for linux) for use
 
 # Building instructions
