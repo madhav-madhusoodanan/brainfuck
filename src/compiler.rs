@@ -8,14 +8,14 @@ const LLIMIT:Memtype = 0;
 
 pub enum CompileError {
     ReadError,
-    ItsTooBig(usize),
-    ItsTooSmall(usize),
-    OppositesNotAttracted(usize)
+    OppositesNotAttracted(usize)    // thats when the loop brackets are not properly matched
+    // ItsTooBig(usize),
+    // ItsTooSmall(usize),
 }
 
+/* thats just an easter egg */
 fn rick_roll_check(code: &String) {
     if code.contains("rick") {
-        // print "Never gonna give you up, never gonna let you down <3"
         println!("Never gonna give you up, never gonna let you down <3")
     }
 }
@@ -27,6 +27,8 @@ pub fn evaluate(code: &String) -> Result<Vec<Memtype>, CompileError> {
     let mut code_index = 0usize;
     let mut output: Vec<Memtype> = Vec::new();
     let mut loop_points:Vec<(usize, usize)> = Vec::new();
+
+    /* checking for loop points, and verifying if the loop brackets are properly matched */
     {
         let mut loc:Vec<usize> = Vec::new();
         for (code_index, code) in bytes.iter().enumerate() {
@@ -53,9 +55,9 @@ pub fn evaluate(code: &String) -> Result<Vec<Memtype>, CompileError> {
                     b'+' => { 
                         // increment value at a memory location 
                         if memory[address] == ULIMIT {
-                            // memory[address] = LLIMIT;
-                            // code_index += 1;
-                            return Err(CompileError::ItsTooBig(code_index))
+                            memory[address] = LLIMIT;
+                            code_index += 1;
+                            // return Err(CompileError::ItsTooBig(code_index))
                         } else {
                             memory[address] += 1;
                             code_index += 1;
@@ -64,9 +66,9 @@ pub fn evaluate(code: &String) -> Result<Vec<Memtype>, CompileError> {
                     b'-' => { 
                         // decrement value at the memory location
                         if memory[address] == LLIMIT {
-                            // memory[address] = ULIMIT;
-                            // code_index += 1;
-                            return Err(CompileError::ItsTooSmall(address))
+                            memory[address] = ULIMIT;
+                            code_index += 1;
+                            // return Err(CompileError::ItsTooSmall(address))
                         } else {
                             memory[address] -= 1;
                             code_index += 1;

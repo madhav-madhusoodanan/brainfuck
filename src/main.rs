@@ -32,9 +32,10 @@ fn main() {
                     }, 
                     Err(e) => {
                         match e {
-                            compiler::CompileError::ItsTooSmall(_) => println!("Dude in {}, one memory cell just became negative", file),
-                            compiler::CompileError::ItsTooBig(_) => println!("Dude in {}, one memory cell just became soo big", file),
-                            _ => println!("Dude i cant process {} file idk why :(", file)
+                            // compiler::CompileError::ItsTooSmall(_) => println!("Dude in {}, one memory cell just became negative", file),
+                            // compiler::CompileError::ItsTooBig(_) => println!("Dude in {}, one memory cell just became soo big", file),
+                            compiler::CompileError::ReadError => println!("Dude i cant process {} file idk why :(", file),
+                            compiler::CompileError::OppositesNotAttracted(index) => println!("Dude the loop brackets arent properly matched at code index {}", index)
                         }
                         continue;
                     }
@@ -62,9 +63,10 @@ fn main() {
             }, 
             Err(e) => {
                 match e {
-                    compiler::CompileError::ItsTooSmall(_) => println!("Dude one memory cell just became negative"),
-                    compiler::CompileError::ItsTooBig(_) => println!("Dude one memory cell just became soo big"),
-                    _ => println!("Dude i cant process this idk why :(")
+                    // compiler::CompileError::ItsTooSmall(_) => println!("Dude one memory cell just became negative"),
+                    // compiler::CompileError::ItsTooBig(_) => println!("Dude one memory cell just became soo big"),
+                    compiler::CompileError::ReadError => println!("Dude i cant process this idk why :("),
+                    compiler::CompileError::OppositesNotAttracted(_) => println!("Dude the loop brackets arent properly matched here")
                 }
             }
         }
