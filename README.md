@@ -1,10 +1,10 @@
 # Brainfuck (complete)
 
-A compiler written in rust, for code written in brainfuck<br/>
-Please use the latest binary (built for linux) for use
+An interpreter written in rust, for code written in brainfuck<br />
+Please use the latest binary(built for linux) for use
 
 # Building instructions
-You must frst install the [rust](https://www.rust-lang.org) compiler and the Cargo package management system.
+You must first install the [rust](https://www.rust-lang.org) compiler and the Cargo package management system.
 
 in the package, run
 ```
