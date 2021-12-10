@@ -1,7 +1,7 @@
-# brainfuck (complete)
+# Brainfuck (complete)
 
-A compiler written in rust, for code written in brainfuck
-Please use the latest binary(built for linux) for use
+A compiler written in rust, for code written in brainfuck<br/>
+Please use the latest binary (built for linux) for use
 
 # Building instructions
 You must frst install the [rust](https://www.rust-lang.org) compiler and the Cargo package management system.
@@ -16,11 +16,10 @@ cargo run --release
 ```
 to process code in the terminal itself
 
-Visit this [site](https://gist.github.com/roachhd/dce54bec8ba55fb17d3a) to learn the language.<br />
+# Resources
 
-# Specification
 <ol>
-    <li>There are errors for overflow/underflow.</li>
-    <li>Cells dont wraparound :)</li>
-    <li>Rest is as usual</li>
+    <li /> Watch this [awesome video](https://www.youtube.com/watch?v=hdHjjBS4cs8) by Fireship.io <br />
+    <li /> Visit this [site](https://gist.github.com/roachhd/dce54bec8ba55fb17d3a) to learn the language<br />
 </ol>
+
