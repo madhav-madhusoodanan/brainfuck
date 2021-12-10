@@ -29,6 +29,7 @@ fn main() {
                         for ch in chars {
                             print!("{}", ch as char);
                         }
+                        println!("");
                     }, 
                     Err(e) => {
                         match e {

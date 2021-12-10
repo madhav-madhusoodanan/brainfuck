@@ -16,6 +16,12 @@ cargo run --release
 ```
 to process code in the terminal itself
 
+if you are using the binary directly, run
+
+```
+./brainfuck <filename1> <filename2>
+```
+
 # Resources
 
 <ol>
