@@ -14,7 +14,7 @@ or just
 ```
 cargo run --release
 ```
-to process code in the terminal itself
+to spin up a terminal session
 
 if you are using the binary directly, run
 
