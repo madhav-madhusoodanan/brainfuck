@@ -1,6 +1,6 @@
-# Brainfuck (complete)
+# The Brainfuck Virtual machine
 
-An interpreter written in rust, for code written in brainfuck<br />
+A virtual machine written in rust, for code written in brainfuck<br />
 Please use the latest binary(built for linux) for use
 
 # Building instructions
